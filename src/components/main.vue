@@ -15,7 +15,7 @@
           :active="activeCard && card.id === activeCard.id"
           :selected="isSelected(card)"
           @click.native="active(card)"
-          @select="select(card)"
+          @select="select"
         )  
 
     .result-side
@@ -72,10 +72,14 @@ export default {
       this.activeCard = card;
     },
     select(card) {
-      this.selectedCards.push(card);
+      if (this.isSelected(card)) {
+        this.selectedCards = this.selectedCards.filter(_ => _.id !== card.id);
+      } else {
+        this.selectedCards.push(card);
+      }
     },
     isSelected(card) {
-      return this.selectedCards.find(_ => _.id === card.id)?.length;
+      return this.selectedCards.find(_ => _.id === card.id);
     }
   }
 }
@@ -94,34 +98,34 @@ export default {
       .header-wrapper
         font-weight 500
         font-family Avenir
-        font-size 14px
+        font-size 12px
         color #b0b0b0
         margin-bottom 14px
       .input-wrapper
         position sticky
         top 0px
-        background #fff
         z-index 1
         padding-right 16px
         width calc(100% - 16px)
-        box-shadow 0px 28px 11px -3px rgba(255, 255, 255, 0.5)
         input
           display flex
           width calc(100% - 16px)
-          height 20px
+          height 28px
           margin-bottom 20px
-          font-size 20px
+          font-size 22px
           border 0.5px solid grey
           border-radius 8px
           padding 8px
           text-align center
+          background hsla(0, 0%, 100%, .5) border-box
+          -webkit-backdrop-filter: blur(4px);
       .card-wrapper
         padding-right 16px
         .card-client
           margin-bottom 8px
     .result-side
       border-left 1px solid #f0f0f0
-      width 40%
+      width 60%
       .active-card
         font-size 32px
         padding 32px
@@ -139,7 +143,7 @@ export default {
           cursor pointer
           &.get-top
             margin-top 32px
-            height 60px
+            min-height 60px
             text-align center
             vertical-align center
             line-height 60px
