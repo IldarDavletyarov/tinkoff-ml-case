@@ -1,7 +1,7 @@
 <template lang="pug">
 .card-client.neo
   .info
-    .title Client {{ data.id }}
+    .title Клиент {{ data.id }}
     .subtitle {{ data.gender }} {{ data.marital_status }} {{ data.age }}
   .check
 </template>
@@ -31,7 +31,7 @@ export default {
 .card-client.neo
   height 42px
   padding 8px 16px
-  margin-top 8px
+  cursor pointer
   .info
     text-align left
     .title
