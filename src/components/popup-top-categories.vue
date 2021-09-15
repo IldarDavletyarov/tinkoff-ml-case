@@ -1,11 +1,12 @@
 <template lang="pug">
-.popup-top-categories(v-if="isShow" @click.self="$emit('close')")
-  .content
-    .title Топ-категории
-    .categories
-      .category(v-for="category in results" :key="category") {{ category }}
-    .actions
-      .button.neo.get-full(@click="getFull" v-if="!additional.length") Получить полный список
+transition(name="popup")
+  .popup-top-categories(v-if="isShow" @click.self="$emit('close')")
+    .content
+      .title Топ-категории
+      .categories
+        .category(v-for="category in results" :key="category") {{ category }}
+      .actions
+        .button.neo.get-full(@click="getFull" v-if="!additional.length") Получить полный список
 </template>
 <script>
 export default {
@@ -38,12 +39,20 @@ export default {
   },
   methods: {
     getFull() {
-      this.additional = Array(10).fill('hello');
+      this.additional = Array(20).fill('хахахатон');
     }
   }
 };
 </script>
 <style lang="stylus">
+.popup-enter-active
+.popup-leave-active
+  transition opacity .3s
+
+.popup-enter
+.popup-leave-to
+  opacity 0
+
 .popup-top-categories
   background hsla(0, 0%, 100%, .5) border-box
   -webkit-backdrop-filter: blur(2px);

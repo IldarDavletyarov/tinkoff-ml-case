@@ -3,11 +3,11 @@
   popup-top-categories(:categories="top" :card="activeCard" :is-show="isTopShow" @close="isTopShow = false")
   .wrapper
     .search-side
-      .header-wrapper Выберите клиента для более подробной информации о топ-категориях.
+      .header-wrapper Предсказываем релевантные категории для клиентов Тинькофф-Банка.
         br
-        | Выберите сразу несколько для расчета средних бизнес-метрик
+        | Попробуйте и проверьте сами
       .input-wrapper
-        input(v-model="searchText" type="search" :placeholder="placeholder")
+        input(v-model="searchText" type="search" :placeholder="placeholder" :class="{'not-empty': !!searchText.length }")
       .card-wrapper
         card-client(
           v-for="card in searchResults"
@@ -18,27 +18,34 @@
           @click.native="active(card)"
           @select="select"
         )  
+        .label Найдено 
 
     .result-side
-      .selected-menu(v-if="selectedCards.length")
-        .title {{ selectedCards.length }}
-        .neo.button(@click="getMetrics") Получить средние бизнес-метрики
-        .neo.button.clear(@click="clear") Снять выделение
-      .active-card(v-else-if="activeCard")
-        .title Клиент {{ activeCard.id }}
-        .row
-          .label Пол
-          .value {{ activeCard.gender }}
-        .row
-          .label Возраст
-          .value {{ activeCard.age }}
-        .row
-          .label Семейное положение
-          .value {{ activeCard.marital_status }}
-        .row
-          .label Количество детей
-          .value {{ activeCard.amount_children }}
-        .neo.button.get-top(@click="getTop") Получить список топ-категорий
+      transition(name="fade" mode="out-in")
+        .selected-menu(v-if="selectedCards.length" key="selected")
+          .title {{ selectedTitle }}
+          .subtitle id: {{ selectedCards.map(_ => _.id).join(', ') }}
+          .neo.button(@click="getMetrics") Получить средние бизнес-метрики
+          .neo.button.clear(@click="clear") Снять выделение
+        .active-card(v-else-if="activeCard" key="card")
+          .title Клиент {{ activeCard.id }}
+          .row
+            .label Пол
+            .value {{ activeCard.gender }}
+          .row
+            .label Возраст
+            .value {{ activeCard.age }}
+          .row
+            .label Семейное положение
+            .value {{ activeCard.marital_status }}
+          .row
+            .label Количество детей
+            .value {{ activeCard.amount_children }}
+          .neo.button.get-top(@click="getTop") Получить список топ-категорий
+        .empty(v-else key="empty")
+          .label Выберите клиента для более подробной информации о топ-категориях.
+          br
+          | Выберите сразу несколько для расчета средних бизнес-метрик
 
 
 </template>
@@ -65,10 +72,14 @@ export default {
     top: [],
   }),
   computed: {
+    selectedTitle() {
+      const n = this.selectedCards.length
+      return `${ pluralize(n,['Выбран', 'Выбрано', 'Выбрано'])} ${ n } ${ pluralize(n, ['клиент', 'клиента', 'клиентов'])} `;
+    },
     searchResults() {
       try {
         const regExp = new RegExp(this.searchText);
-        return this.results.filter(_ => regExp.test(JSON.stringify(_)));
+        return this.results.filter(_ => regExp.test(Object.values(_).join()));
       } catch(e) {
         console.error(e);
         return this.results;
@@ -80,6 +91,9 @@ export default {
   },
   methods: {
     active(card) {
+      if (this.selectedCards.length) {
+        return;
+      }
       if (card.id === this.activeCard?.id) {
         this.activeCard = undefined;
       } else {
@@ -105,12 +119,22 @@ export default {
       this.isTopShow = true;
     },
     getMetrics() {
-      console.log('q');
+      console.log('hello');
     }
   }
 }
 </script>
 <style lang="stylus">
+
+.fade-enter-active
+.fade-leave-active
+  transition opacity .2s
+
+.fade-enter
+.fade-leave-to
+  opacity 0
+
+
 .main
   .wrapper
     max-width 1280px
@@ -120,7 +144,7 @@ export default {
     .search-side
       width 40%
       overflow auto
-      height calc(100vh - 200px)
+      height calc(100vh - 150px)
       &::-webkit-scrollbar-thumb
         background green
         box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -135,38 +159,60 @@ export default {
         position sticky
         top 0px
         z-index 1
-        padding-right 16px
-        width calc(100% - 16px)
+        padding-right 24px
+        width calc(100% - 24px)
         input
+          transition all .25s ease-in-out
           display flex
-          width calc(100% - 16px)
+          width calc(100% - 80px)
           height 28px
           margin-bottom 20px
           font-size 22px
           border 0.5px solid grey
           border-radius 8px
-          padding 8px
-          text-align center
+          padding 8px 40px
+          text-align left
           background hsla(0, 0%, 100%, .5) border-box
-          -webkit-backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px)
+          &.not-empty
+          &:focus
+            padding 8px
+            width calc(100% - 16px)
       .card-wrapper
-        padding-right 16px
+        padding-right 24px
         .card-client
-          margin-bottom 8px
+          margin-bottom 12px
     .result-side
       border-left 1px solid #f0f0f0
       width 60%
+      .empty
+        padding 32px
+        font-weight 500
+        font-family Avenir
+        font-size 16px
+        color #b0b0b0
+        text-align center
+        margin-top 20vh
       .selected-menu
         font-size 32px !important
         padding 32px
+        .title
+          font-size 36px
+          letter-spacing 2px
+          font-weight 600
+        .subtitle
+          margin-top 16px
+          color #aeaeae
       .active-card
         font-size 32px
         padding 32px
         .title
           font-size 36px
           font-weight 600
+          letter-spacing 2px
         .row
           display flex
+          margin-top 4px
           .label::after
             content ':'
           .value
