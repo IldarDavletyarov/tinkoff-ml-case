@@ -35,6 +35,10 @@ export default {
   padding 8px 16px
   position relative
   cursor pointer
+  border-left 0px solid black
+  &.active-client
+    box-sizing content-box
+    border-left 6px solid black
   .info
     text-align left
     .title

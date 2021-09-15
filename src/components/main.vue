@@ -1,5 +1,6 @@
 <template lang="pug">
 .main
+  popup-top-categories(:categories="top" :card="activeCard" :is-show="isTopShow" @close="isTopShow = false")
   .wrapper
     .search-side
       .header-wrapper Выберите клиента для более подробной информации о топ-категориях.
@@ -19,7 +20,11 @@
         )  
 
     .result-side
-      .active-card(v-if="activeCard")
+      .selected-menu(v-if="selectedCards.length")
+        .title {{ selectedCards.length }}
+        .neo.button(@click="getMetrics") Получить средние бизнес-метрики
+        .neo.button.clear(@click="clear") Снять выделение
+      .active-card(v-else-if="activeCard")
         .title Клиент {{ activeCard.id }}
         .row
           .label Пол
@@ -33,25 +38,31 @@
         .row
           .label Количество детей
           .value {{ activeCard.amount_children }}
-        .neo.button.get-top Получить список топ-категорий  
+        .neo.button.get-top(@click="getTop") Получить список топ-категорий
+
+
 </template>
 <script>
 
 import mock from '/MOCK_DATA.json';
 
 import CardClient from './card-client.vue';
+import PopupTopCategories from './popup-top-categories.vue';
 
 import { pluralize } from '../utils';
 
 export default {
   components: {
     CardClient,
+    PopupTopCategories,
   },
   data: () => ({
     results: mock,
     selectedCards: [],
     activeCard: undefined,
     searchText: '',
+    isTopShow: false,
+    top: [],
   }),
   computed: {
     searchResults() {
@@ -69,7 +80,11 @@ export default {
   },
   methods: {
     active(card) {
-      this.activeCard = card;
+      if (card.id === this.activeCard?.id) {
+        this.activeCard = undefined;
+      } else {
+        this.activeCard = card;
+      }
     },
     select(card) {
       if (this.isSelected(card)) {
@@ -79,7 +94,18 @@ export default {
       }
     },
     isSelected(card) {
-      return this.selectedCards.find(_ => _.id === card.id);
+      return !!this.selectedCards.find(_ => _.id === card.id);
+    },
+    clear() {
+      this.selectedCards = [];
+    },
+    getTop() {
+      const top = ['Аптека', 'Банки', 'Здоровье', 'Красота']; // mock
+      this.top = top;
+      this.isTopShow = true;
+    },
+    getMetrics() {
+      console.log('q');
     }
   }
 }
@@ -94,7 +120,11 @@ export default {
     .search-side
       width 40%
       overflow auto
-      height 100vh
+      height calc(100vh - 200px)
+      &::-webkit-scrollbar-thumb
+        background green
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+
       .header-wrapper
         font-weight 500
         font-family Avenir
@@ -126,6 +156,9 @@ export default {
     .result-side
       border-left 1px solid #f0f0f0
       width 60%
+      .selected-menu
+        font-size 32px !important
+        padding 32px
       .active-card
         font-size 32px
         padding 32px
@@ -139,16 +172,23 @@ export default {
           .value
             font-weight 600
             margin-left 6px
-        .button
-          cursor pointer
-          &.get-top
-            margin-top 32px
-            min-height 60px
-            text-align center
-            vertical-align center
-            line-height 60px
-            background #f9de56
-            border-radius 16px !important
+  .button
+    cursor pointer
+    margin-top 32px
+    min-height 60px
+    text-align center
+    vertical-align center
+    line-height 60px
+    background #f9de56
+    border-radius 16px !important
+    font-size 32px
+    &.clear
+      background #fff
+      border 1px solid #aeaeae
+      color #aeaeae
+      &:hover
+        border 1px solid #000
+        color #000
 
 
 </style>
