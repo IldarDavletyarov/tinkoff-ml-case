@@ -1,22 +1,24 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<template lang="pug">
+#app
+  h1 Tinkoff ML Case
+  main-form
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MainForm from './components/main.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    MainForm
   }
 }
 </script>
 
 <style lang="stylus">
+html
+body
+  background-color #fefeff
 #app
   font-family Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing antialiased
@@ -24,4 +26,14 @@ export default {
   text-align center
   color #2c3e50
   margin-top 60px
+  .neo
+    border-radius 8px
+    background #ffffff
+    box-shadow  4px 4px 9px #d9d9d9, -4px -4px 9px #ffffff
+    transition: all ease-out 400ms
+    &.active
+    &:hover {
+      box-shadow: 5px 5px 10px #919191
+      -5px -5px 10px #ffffff
+}
 </style>
