@@ -9,6 +9,7 @@
       .input-wrapper
         input(v-model="searchText" type="search" :placeholder="placeholder" :class="{'not-empty': !!searchText.length }")
       .card-wrapper
+        .label(:class="{'show': !!searchText.length }") {{ searchLabel }}
         card-client(
           v-for="card in searchResults"
           :key="card.id"
@@ -17,8 +18,7 @@
           :selected="isSelected(card)"
           @click.native="active(card)"
           @select="select"
-        )  
-        .label Найдено 
+        )
 
     .result-side
       transition(name="fade" mode="out-in")
@@ -83,6 +83,14 @@ export default {
       } catch(e) {
         console.error(e);
         return this.results;
+      }
+    },
+    searchLabel() {
+      const n = this.searchResults.length;
+      if (!n) {
+        return 'Ничего не найдено. Попробуйте поменять запрос';
+      } else {
+        return `${pluralize(n, ['Найден', 'Найдено', 'Найдено'])} ${ n } ${pluralize(n, ['подходящий клиент', 'подходящих клиента', 'подходящих клиентов'])}`
       }
     },
     placeholder() {
@@ -180,8 +188,22 @@ export default {
             width calc(100% - 16px)
       .card-wrapper
         padding-right 24px
+        position relative
         .card-client
           margin-bottom 12px
+        .label
+          text-align center
+          color #afafaf
+          position absolute
+          left 50%
+          transform translateX(-50%)
+          top -16px
+          font-size 12px
+          opacity 0
+          white-space nowrap
+          &.show
+            opacity 1
+            transition all .3s ease-in-out
     .result-side
       border-left 1px solid #f0f0f0
       width 60%
