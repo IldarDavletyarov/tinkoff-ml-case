@@ -152,7 +152,7 @@ export default {
     .search-side
       width 40%
       overflow auto
-      height calc(100vh - 330px)
+      height calc(100vh - 350px)
       min-height 100%
       &::-webkit-scrollbar-thumb
         background green
