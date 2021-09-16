@@ -55,7 +55,7 @@ export default {
 
 .popup-top-categories
   background hsla(0, 0%, 100%, .5) border-box
-  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter blur(2px)
   position fixed
   height 100vh
   top 0

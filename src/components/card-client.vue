@@ -1,5 +1,5 @@
 <template lang="pug">
-.card-client.neo(:class="{'active-client': active, 'selected': selected }")
+.card-client.neo.no-select(:class="{'active-client': active, 'selected': selected }")
   .info
     .title Клиент {{ data.id }}
     .subtitle {{ data.gender }} {{ data.marital_status }} {{ data.age }}
@@ -69,5 +69,4 @@ export default {
       border 1px solid #000
       svg
         opacity 1
-      
 </style>

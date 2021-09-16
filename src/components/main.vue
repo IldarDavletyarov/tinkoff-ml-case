@@ -152,14 +152,14 @@ export default {
     .search-side
       width 40%
       overflow auto
-      height calc(100vh - 150px)
+      height calc(100vh - 330px)
+      min-height 100%
       &::-webkit-scrollbar-thumb
         background green
         box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 
       .header-wrapper
         font-weight 500
-        font-family Avenir
         font-size 12px
         color #b0b0b0
         margin-bottom 14px
@@ -175,13 +175,13 @@ export default {
           width calc(100% - 80px)
           height 28px
           margin-bottom 20px
-          font-size 22px
-          border 0.5px solid grey
+          font-size 18px
+          border 1px solid #cecece
           border-radius 8px
           padding 8px 40px
           text-align left
           background hsla(0, 0%, 100%, .5) border-box
-          -webkit-backdrop-filter: blur(4px)
+          backdrop-filter: blur(4px)
           &.not-empty
           &:focus
             padding 8px
@@ -210,7 +210,6 @@ export default {
       .empty
         padding 32px
         font-weight 500
-        font-family Avenir
         font-size 16px
         color #b0b0b0
         text-align center
@@ -240,6 +239,41 @@ export default {
           .value
             font-weight 600
             margin-left 6px
+    @media only screen and (max-width: 960px)
+      flex-direction column
+      flex-flow column-reverse
+      .search-side
+        width 100%
+        height auto
+        .header-wrapper
+          display none
+        .input-wrapper
+          padding 0 8px
+          width calc(100% - 16px)
+          input
+            padding 8px
+            width calc(100% - 16px)
+        .card-wrapper
+          padding 0 8px
+      .result-side
+        width 100%
+        border-left none
+        .empty
+        .active-card
+        .selected-menu
+          font-size 18px
+          min-height 204px
+          padding 8px
+          margin 0
+          .title
+            font-size 24px
+        .empty
+          text-align left
+          font-size 24px
+          font-weight 600
+          font-family Helvetica
+          letter-spacing 1px
+  
   .button
     cursor pointer
     margin-top 32px
@@ -250,6 +284,14 @@ export default {
     background #f9de56
     border-radius 16px !important
     font-size 32px
+    white-space nowrap
+    @media only screen and (max-width: 960px)
+      font-size 18px
+      min-height 48px
+      line-height 48px
+      border-radius 12px !important
+      margin-top 16px
+      
     &.clear
       background #fff
       border 1px solid #aeaeae
